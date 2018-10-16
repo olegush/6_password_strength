@@ -1,6 +1,21 @@
 # Password Strength Calculator
 
-[TODO. There will be project description]
+The script checked input password strength according Wikipedia advices [https://en.wikipedia.org/wiki/Password_policy](https://en.wikipedia.org/wiki/Password_policy)
+
+# Quickstart
+
+Run **password_strength.py** 
+
+Example of script launch on Linux, Python 3.5:
+
+```bash
+
+$ python password_strength.py
+
+Password:GhuesT@17
+
+Your password's strength
+```
 
 # Project Goals
 
