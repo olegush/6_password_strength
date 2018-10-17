@@ -1,16 +1,16 @@
 # Password Strength Calculator
 
-The script checked input password strength according Wikipedia advices [https://en.wikipedia.org/wiki/Password_policy](https://en.wikipedia.org/wiki/Password_policy)
+The script checked input password strength according Wikipedia advices [https://en.wikipedia.org/wiki/Password_policy](https://en.wikipedia.org/wiki/Password_policy). File with passwords blacklist took here [https://github.com/danielmiessler/SecLists/blob/master/Passwords/UserPassCombo-Jay.txt](https://github.com/danielmiessler/SecLists/blob/master/Passwords/UserPassCombo-Jay.txt)
 
 # Quickstart
 
-Run **password_strength.py** 
+Run **password_strength.py** with  path to text file of passwords blacklist as parameter. 
 
 Example of script launch on Linux, Python 3.5:
 
 ```bash
 
-$ python password_strength.py
+$ python password_strength.py <filepath>
 
 Password:GhuesT@17
 
