@@ -1,11 +1,10 @@
 import getpass
-import os.path
 import sys
 import string
 
 
 def load_data(filepath):
-    with open(filepath, 'rb') as file:
+    with open(filepath, 'r') as file:
         return file.read()
 
 
@@ -18,32 +17,49 @@ def get_password_char_strength(password):
         if char.islower():
             strength_lower = 1
         if char.isupper():
-            strength_upper = 2
+            strength_upper = 3
         if char.isdigit():
             strength_digit = 2
-        if string.punctuation.find(char) > -1:
+        if char in string.punctuation:
             strength_specials = 4
     return strength_upper + strength_digit + strength_lower + strength_specials
 
 
-def get_password_strength(password, password_blacklist):
-    min_password_length = 4
-    if password_blacklist.count(password) > 0:
-        return '1 (the password in blacklist)'
-    elif len(password) < min_password_length:
-        return '1 (the password less than 4 symbols)'
+def get_password_strength(password, passwords_blacklist, msgs):
+    safety = 1
+    msg = ''
+    if passwords_blacklist:
+        if password in passwords_blacklist:
+            safety = 0
+            msg = msgs['in_black']
     else:
-        strength_len = 1
-        return strength_len + get_password_char_strength(password)
+        msg = msgs['didnt_check_black']
+    min_password_length = 4
+    if len(password) < min_password_length:
+        safety = 0
+        msg = msgs['less_than_4']
+    strength = safety * get_password_char_strength(password)
+    return strength, msg
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        exit('need filename')
-    user_filepath = sys.argv[1]
-    if not os.path.exists(user_filepath):
-        exit('need correct file path')
-    user_password = getpass.getpass(prompt='Password: ', stream=None)
-    password_blacklist = load_data(user_filepath)
-    print('Your password strength is:{}'
-          .format(get_password_strength(user_password, password_blacklist)))
+    try:
+        if len(sys.argv) == 2:
+            user_filepath = sys.argv[1]
+            passwords_blacklist = load_data(user_filepath).splitlines()
+        else:
+            passwords_blacklist = None
+        user_password = getpass.getpass(prompt='Password: ', stream=None)
+        msgs = {
+            'in_black': '(the password in blacklist)',
+            'didnt_check_black': '(but its did not check with blacklist)',
+            'less_than_4': '(the password less than 4 symbols)'
+        }
+        strength, msg = get_password_strength(
+            user_password,
+            passwords_blacklist,
+            msgs
+        )
+        print('Your password strength: {} {}'.format(strength, msg))
+    except IOError:
+        print ('No such file or directory')
