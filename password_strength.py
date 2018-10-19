@@ -26,25 +26,25 @@ def get_password_char_strength(password):
 
 
 def get_password_strength(password, passwords_blacklist):
-    msgs = {
-        'in_black': 'The password in blacklist.',
-        'didnt_check_black': 'But its did not check with blacklist.',
-        'less_than_4': 'The password less than 4 symbols.'
-    }
+    msgs = [
+        'The password in blacklist.',
+        'But its did not check with blacklist.',
+        'The password less than 4 symbols.'
+    ]
     safety = 1
     msg = ''
     if passwords_blacklist:
         if password in passwords_blacklist:
             safety = 0
-            msg = msgs['in_black']
+            msg = msgs[0]
     else:
-        msg = msgs['didnt_check_black']
+        msg = msgs[1]
     min_password_length = 4
     if len(password) < min_password_length:
         safety = 0
-        msg = msgs['less_than_4']
+        msg = msgs[2]
     strength = safety * get_password_char_strength(password)
-    return msgs, strength, msg
+    return strength, msg
 
 
 if __name__ == '__main__':
@@ -54,12 +54,10 @@ if __name__ == '__main__':
             passwords_blacklist = load_data(user_filepath).splitlines()
         else:
             passwords_blacklist = None
-        user_password = getpass.getpass(prompt='Password: ', stream=None)
-        msgs, strength, msg = get_password_strength(user_password,
-                                                    passwords_blacklist)
-        print ('Error codes:')
-        for code, err in msgs.items():
-            print(err)
-        print('\nYour password strength: {} {}'.format(strength, msg))
     except IOError:
-        print ('No such file or directory')
+        print('No such file or directory')
+    else:
+        user_password = getpass.getpass(prompt='Password: ', stream=None)
+        strength, msg = get_password_strength(user_password,
+                                              passwords_blacklist)
+        print('Your password strength: {} {}'.format(strength, msg))
